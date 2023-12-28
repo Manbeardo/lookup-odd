@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+option go_package = "github.com/Manbeardo/lookup-odd/pb";
+
+message OddOrEven {
+    repeated bool is_odd = 1;
+}
+
+message CompressedLayer {
+    repeated CompressedSection sections = 1;
+}
+
+message CompressedSection {
+    uint64 start = 1;
+    uint64 end = 2;
+    bytes content = 3;
+}
