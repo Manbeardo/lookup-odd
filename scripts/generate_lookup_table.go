@@ -38,8 +38,8 @@ const (
 const OddByte = Mask1 | Mask3 | Mask5 | Mask7
 
 var layerBitSizes = []uint64{
-	33,
-	17,
+	34,
+	16,
 	8,
 	6,
 }
@@ -66,8 +66,17 @@ func buildLookupTable() ([]byte, error) {
 		return nil, fmt.Errorf("creating compressing encoder: %w", err)
 	}
 	done := watchProgress(int(layerSize), func() int { return int(sectionSize) })
-	for ; sectionSize <= layerSize; sectionSize += 8 {
-		ce.Encode(OddByte)
+	for ; sectionSize <= layerSize; sectionSize += 64 {
+		ce.Encode(
+			OddByte,
+			OddByte,
+			OddByte,
+			OddByte,
+			OddByte,
+			OddByte,
+			OddByte,
+			OddByte,
+		)
 	}
 	done()
 	prevLayer := ce.Close()
@@ -86,8 +95,7 @@ func buildLookupTable() ([]byte, error) {
 		for ; i < uint64(layerSize); i++ {
 			ce.Encode(layerSection{
 				Layer:   layer,
-				Start:   i * prevSectionSize,
-				End:     (i * prevSectionSize) + (sectionSize - 1),
+				Size:    sectionSize,
 				Content: prevLayer,
 			})
 			sectionSize += prevSectionSize
@@ -124,8 +132,7 @@ func watchProgress(max int, checker func() int) func() {
 
 type layerSection struct {
 	Layer   int
-	Start   uint64
-	End     uint64
+	Size    uint64
 	Content []byte
 }
 
