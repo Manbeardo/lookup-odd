@@ -1,4 +1,4 @@
-# lookup-odd
+# lookup-odd - the oddness of every uint64 number compressed into a 5MB binary
 
 ![Screenshot_20231228-215510](https://github.com/Manbeardo/lookup-odd/assets/698833/fea0079b-f4a2-43f3-85f3-b421f5104abe)
 
