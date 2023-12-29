@@ -48,7 +48,7 @@ func IsOdd(num uint64) (bool, error) {
 			sectionStart += section.NumberCount
 		}
 		if Verbose {
-			log.Printf("reading node %d in layer %d", i, section.Layer)
+			log.Printf("reading node %d in layer %d (%s)", i, section.Layer, section.Codec)
 		}
 	}
 

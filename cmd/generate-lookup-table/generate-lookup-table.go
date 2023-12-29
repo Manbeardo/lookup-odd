@@ -69,7 +69,7 @@ func main() {
 }
 
 func buildLookupTable() (*layer.Section, error) {
-	prevCodec := ""
+	prevCodec := "no compression"
 	prevLayer := []byte{}
 	for i := uint64(0); i < BytesPerLayer0Section; i++ {
 		prevLayer = append(prevLayer, layer.BitMask1|layer.BitMask3|layer.BitMask5|layer.BitMask7)
