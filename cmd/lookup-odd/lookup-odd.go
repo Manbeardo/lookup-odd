@@ -10,11 +10,14 @@ import (
 
 type CLI struct {
 	Numbers []uint64 `arg:""`
+	Verbose bool     `short:"v"`
 }
 
 func main() {
 	cli := CLI{}
 	kong.Parse(&cli)
+
+	lookupodd.Verbose = cli.Verbose
 
 	for _, num := range cli.Numbers {
 		isOdd, err := lookupodd.IsOdd(num)
@@ -22,9 +25,9 @@ func main() {
 			log.Fatalf("error looking up %d: %s", num, err)
 		}
 		if isOdd {
-			fmt.Println("yes")
+			fmt.Println("odd")
 		} else {
-			fmt.Println("no")
+			fmt.Println("even")
 		}
 	}
 }

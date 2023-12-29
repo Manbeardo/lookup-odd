@@ -5,9 +5,12 @@ import (
 	_ "embed"
 	"encoding/gob"
 	"fmt"
+	"log"
 
 	"github.com/Manbeardo/lookup-odd/layer"
 )
+
+var Verbose = false
 
 //go:generate go run -mod=mod ./cmd/generate-lookup-table
 
@@ -36,23 +39,34 @@ func IsOdd(num uint64) (bool, error) {
 		if err != nil {
 			return false, fmt.Errorf("decoding layer %d's subsections: %w", section.Layer, err)
 		}
-		for _, subSection := range subSections {
-			section = subSection
+		var i int
+		for i, section = range subSections {
 			// this weird style of check avoids overflowing uint64
 			if num <= sectionStart+(section.NumberCount-1) {
 				break
 			}
 			sectionStart += section.NumberCount
 		}
+		if Verbose {
+			log.Printf("reading node %d in layer %d", i, section.Layer)
+		}
 	}
+
+	var i int
 	var byteToCheck byte
-	for _, byteToCheck = range section.Content {
+	for i, byteToCheck = range section.Content {
 		if num <= sectionStart+7 {
 			break
 		}
 		sectionStart += 8
 	}
-	switch num - sectionStart {
+
+	offset := num - sectionStart
+	if Verbose {
+		log.Printf("reading bit %d from byte %d in layer 0", offset, i)
+	}
+
+	switch offset {
 	case 0:
 		return (byteToCheck & layer.BitMask0) > 0, nil
 	case 1:
