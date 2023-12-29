@@ -6,7 +6,7 @@
 
 Why use the modulus operator for fizzbuzz when you can import a library instead?
 
-Credit to [@andreasjhkarlsson's blog post](https://andreasjhkarlsson.github.io/jekyll/update/2023/12/27/4-billion-if-statements.html) and [/u/joske79's comment](https://www.reddit.com/r/programming/comments/18s69kd/comment/kf5gt3o/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button) for inspiration!
+Credit to [@andreasjhkarlsson's blog post](https://andreasjhkarlsson.github.io/jekyll/update/2023/12/27/4-billion-if-statements.html) and [/u/joske79's comment](https://www.reddit.com/r/programming/comments/18s69kd/comment/kf5gt3o/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button) for inspiration
 
 ![Selected photo](https://github.com/Manbeardo/lookup-odd/assets/698833/adb28860-afc2-425a-a7a0-834488736ace)
 
