@@ -1,4 +1,76 @@
-TODO:
+# lookup-odd
 
-- figure out how the hell to publish the lookup table
-- implement the app, not just the lookup table generator
+`lookup-odd` is a tool and library that can determine whether a uint64 is odd without resorting to using the modulus operator and it's only 86 million times slower!
+
+Why use the modulus operator for fizzbuzz when you can import a library instead?
+
+## how it works
+
+`lookup-odd` includes an embedded 13kB lookup table that contains a precomputed result for every possible uint64. The lookup table is a search tree where each generation is compressed with the codec from our ensemble that produces the best results. In order to figure out whether a number is odd, we use the search tree, decompressing each node's contents as we encounter it until we eventually find the bit that tells us whether the number is odd or even!
+
+Each node of the search tree contains:
+
+- a count of its child nodes
+- a count of the integers it covers
+- which layer it is in (we need this because the leaf nodes are encoded differently)
+- which codec was used to compress its child nodes
+- its encoded and compressed child nodes
+
+## how we build the lookup table
+
+Luckily for us, the oddness of numbers happens in such a predictable pattern that we're guaranteed that every node's value within a generation will be identical so long as they all cover the same number of numbers and that number is divisible by 2! We're able to take advantage of that principle by memoizing the nodes for each generation as we build a table covering every uint64.
+
+In order to ensure the table is of a reasonable size, we run an ensemble of compression algorithms (zlib, gzip, lzw, and bzip2) on each generation and use the result which achieved the highest compression ratio.
+
+In order to build the table within a reasonable amount of time, we have a hand-tuned number of bits that each generation covers. A generation that covers 6 bits has 64 (2^64) nodes. The bit depth for each generation is hand-tuned because we need the total number of bits to be 64 (we're covering uint64 after all) and ideally, each generation would meet these size guidelines:
+
+- expanded: <2MB
+- compressed: <16kB
+
+The expanded size guideline is boring. It's just there to keep the library from using too much memory at runtime. The interesting one is the 16kB limit on compressed generation size. Most compression algorithms use a 32kB window to search for substrings, so keeping our individual nodes smaller than 16kB lets the algorithm's window see two copies of the node at a time. When the algorithm can see two copies of the node simultaneously, it's able to load all of the node's contents into its dictionary, which unlocks huge compression ratios. By tuning the bit depth of each generation, we were able to get the final table size down all the way to 18kB. That tunning is absolutely critical because the node sizes quickly spiral out of control if a single generation exceeds the 16kB limit by too much.
+
+## install instructions
+
+requires some version (who cares?) of Go installed locally
+
+```bash
+go install github.com/Manbeardo/lookup-odd/cmd/lookup-odd@latest
+```
+
+## regenerate the lookup table yourself
+
+from the directory where you've cloned the repo, run
+
+```bash
+go generate ./...
+```
+
+## CLI usage
+
+`lookup-odd <number> ...`
+
+```bash
+lookup-odd 0 1 2 3 18446744073709551615
+# output:
+# no
+# yes
+# no
+# yes
+# yes
+```
+
+## Benchmark results
+
+run on an m2 macbook pro
+
+```text
+goos: darwin
+goarch: arm64
+pkg: github.com/Manbeardo/lookup-odd
+BenchmarkIsOdd-12                     46          24702452 ns/op
+BenchmarkModulusOperator-12   1000000000          0.2872 ns/op
+PASS
+ok      github.com/Manbeardo/lookup-odd 12.953s
+```
+
+2.4ms per operation should be plenty fast to check whether a number is odd. How many times do you need to check oddness of a number per day? Twice? Here's 10ms, go see a Star War.
