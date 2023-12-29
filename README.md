@@ -4,6 +4,8 @@
 
 Why use the modulus operator for fizzbuzz when you can import a library instead?
 
+Credit to [@andreasjhkarlsson's blog post](https://andreasjhkarlsson.github.io/jekyll/update/2023/12/27/4-billion-if-statements.html) and [/u/joske79's comment](https://www.reddit.com/r/programming/comments/18s69kd/comment/kf5gt3o/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button) for inspiration!
+
 ## how it works
 
 `lookup-odd` includes an embedded 13kB lookup table that contains a precomputed result for every possible uint64. The lookup table is a search tree where each generation is compressed with the codec from our ensemble that produces the best results. In order to figure out whether a number is odd, we use the search tree, decompressing each node's contents as we encounter it until we eventually find the bit that tells us whether the number is odd or even!
