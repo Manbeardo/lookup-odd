@@ -12,7 +12,7 @@ Credit to [@andreasjhkarlsson's blog post](https://andreasjhkarlsson.github.io/j
 
 No problem!
 
-<img width="435" alt="Screenshot 2023-12-28 at 10 27 40 PM" src="https://github.com/Manbeardo/lookup-odd/assets/698833/1a28b626-5974-430c-b91d-376be5109ce1">
+<img width="447" alt="Screenshot 2023-12-28 at 10 46 51 PM" src="https://github.com/Manbeardo/lookup-odd/assets/698833/c9204385-7314-46a6-bcb4-38a36d434e38">
 
 ## how it works
 
@@ -58,6 +58,10 @@ from the directory where you've cloned the repo, run
 ```bash
 go generate ./...
 ```
+
+on my laptop, it only takes about one second
+
+<img width="550" alt="Screenshot 2023-12-28 at 10 44 34 PM" src="https://github.com/Manbeardo/lookup-odd/assets/698833/eaa15f28-2cff-4a66-b971-6d35615e5c7f">
 
 ## CLI usage
 
