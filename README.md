@@ -1,5 +1,7 @@
 # lookup-odd
 
+![Screenshot_20231228-215510](https://github.com/Manbeardo/lookup-odd/assets/698833/fea0079b-f4a2-43f3-85f3-b421f5104abe)
+
 `lookup-odd` is a tool and library that can determine whether a uint64 is odd without resorting to using the modulus operator and it's only 86 million times slower!
 
 Why use the modulus operator for fizzbuzz when you can import a library instead?
