@@ -16,22 +16,26 @@ Each node of the search tree contains:
 
 - a count of its child nodes
 - a count of the integers it covers
-- which layer it is in (we need this because the leaf nodes are encoded differently)
+- which layer it is in (I need this because the leaf nodes are encoded differently)
 - which codec was used to compress its child nodes
 - its encoded and compressed child nodes
 
-## how we build the lookup table
+## how I built the lookup table
 
-Luckily for us, the oddness of numbers happens in such a predictable pattern that we're guaranteed that every node's value within a generation will be identical so long as they all cover the same number of numbers and that number is divisible by 2! We're able to take advantage of that principle by memoizing the nodes for each generation as we build a table covering every uint64.
+Luckily for us, the oddness of numbers happens in such a predictable pattern that we're guaranteed that every node's value within a generation will be identical so long as they all cover the same number of numbers and that number is divisible by 2! I'm able to take advantage of that principle by memoizing the nodes for each generation as I build the table for every uint64.
 
-In order to ensure the table is of a reasonable size, we run an ensemble of compression algorithms (zlib, gzip, lzw, and bzip2) on each generation and use the result which achieved the highest compression ratio.
+In order to ensure the table is of a reasonable size, I run an ensemble of compression algorithms (zlib, gzip, lzw, and bzip2) on each generation and use the result which achieved the highest compression ratio.
 
-In order to build the table within a reasonable amount of time, we have a hand-tuned number of bits that each generation covers. A generation that covers 6 bits has 64 (2^64) nodes. The bit depth for each generation is hand-tuned because we need the total number of bits to be 64 (we're covering uint64 after all) and ideally, each generation would meet these size guidelines:
+In order to build the table within a reasonable amount of time, I have a hand-tuned number of bits that each generation covers. A generation that covers 6 bits has 64 (2^64) nodes. The bit depth for each generation is hand-tuned because I need the total number of bits to be 64 (we're covering uint64 after all) and ideally, each generation should meet these size guidelines:
 
 - expanded: <2MB
 - compressed: <16kB
 
-The expanded size guideline is boring. It's just there to keep the library from using too much memory at runtime. The interesting one is the 16kB limit on compressed generation size. Most compression algorithms use a 32kB window to search for substrings, so keeping our individual nodes smaller than 16kB lets the algorithm's window see two copies of the node at a time. When the algorithm can see two copies of the node simultaneously, it's able to load all of the node's contents into its dictionary, which unlocks huge compression ratios. By tuning the bit depth of each generation, we were able to get the final table size down all the way to 18kB. That tunning is absolutely critical because the node sizes quickly spiral out of control if a single generation exceeds the 16kB limit by too much.
+The expanded size guideline is boring. It's just there to keep the library from using too much memory at runtime. 
+
+The interesting one is the 16kB limit on compressed generation size. 
+
+Most compression algorithms use a 32kB window to search for substrings, so keeping my individual nodes smaller than 16kB lets the algorithm's window see two copies of the node at a time. When the algorithm can see two copies of the node simultaneously, it's able to load all of the node's contents into its dictionary, which unlocks huge compression ratios. By tuning the bit depth of each generation, I was able to get the final table size down all the way to 18kB. That tuning is **absolutely critical**. If a single generation exceeds the 16kB size target by too much (e.g. 40kB), the next generation baloons to a few MB, then the next generation to a few GB, then my attention span runs out and I hit ctrl+C.
 
 ## install instructions
 
