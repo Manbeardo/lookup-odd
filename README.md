@@ -35,7 +35,7 @@ The expanded size guideline is boring. It's just there to keep the library from 
 
 The interesting one is the 16kB limit on compressed generation size. 
 
-Most compression algorithms use a 32kB window to search for substrings, so keeping my individual nodes smaller than 16kB lets the algorithm's window see two copies of the node at a time. When the algorithm can see two copies of the node simultaneously, it's able to load all of the node's contents into its dictionary, which unlocks huge compression ratios. By tuning the bit depth of each generation, I was able to get the final table size down all the way to 18kB. That tuning is **absolutely critical**. If a single generation exceeds the 16kB size target by too much (e.g. 40kB), the next generation baloons to a few MB, then the next generation to a few GB, then my attention span runs out and I hit ctrl+C.
+Most compression algorithms use a 32kB window to search for substrings, so keeping my individual nodes smaller than 16kB lets the algorithm's window see two copies of the node at a time. When the algorithm can see two copies of the node simultaneously, it's able to load all of the node's contents into its dictionary, which unlocks huge compression ratios. By tuning the bit depth of each generation, I was able to get the final table size down all the way to 18kB. That tuning is ***absolutely critical***. If a single generation exceeds the 16kB size target by too much (e.g. 40kB), the next generation baloons to a few MB, then the next generation to a few GB, then my attention span runs out and I hit ctrl+C.
 
 ## install instructions
 
