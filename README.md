@@ -10,7 +10,7 @@ Credit to [@andreasjhkarlsson's blog post](https://andreasjhkarlsson.github.io/j
 
 ## how it works
 
-`lookup-odd` includes an embedded 13kB lookup table that contains a precomputed result for every possible uint64. The lookup table is a search tree where each generation is compressed with the codec from our ensemble that produces the best results. In order to figure out whether a number is odd, we use the search tree, decompressing each node's contents as we encounter it until we eventually find the bit that tells us whether the number is odd or even!
+The `lookup-odd` binary has an embedded 13kB lookup table that contains a precomputed result for every possible uint64. The lookup table is a search tree where each generation is compressed with the codec from our ensemble that produces the best results. In order to figure out whether a number is odd, we use the search tree, decompressing each node's contents as we encounter it until we eventually find the bit that tells us whether the number is odd or even!
 
 Each node of the search tree contains:
 
